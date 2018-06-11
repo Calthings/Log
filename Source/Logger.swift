@@ -200,12 +200,18 @@ open class Logger {
             function: function,
             date: date
         )
-
-        queue.async {
-            Swift.print(result, separator: "", terminator: "")
-            self.appedStringToLog(result)
-            assert(level != .error, result)
-        }
+        
+        #if DEBUG
+        log(result: result)
+        assert(level != .error, result)
+        #else
+        queue.async { self.log(result: result) }
+        #endif
+    }
+    
+    private func log(result: String) {
+        Swift.print(result, separator: "", terminator: "")
+        appedStringToLog(result)
     }
     
     /**

@@ -173,6 +173,59 @@ open class Logger {
     }
     
     /**
+         The expect() functions below can use used to replace the need to log an error when guarding an expected value
+         It will also log at the exact line and column of the unexpected value, instead of at the location of the log
+     
+         Instead of:
+             guard let variable = optional else {
+                 Log.error("The expected optional was nil")
+                 return
+             }
+             guard let variable = optional else {
+                Log.warning("Warning!")
+                return
+             }
+             guard let variable1 = optional1, let variable2 = optional2, let variable3 = optional3 else {
+                 Log.error("optional1 was \(optional1 ?? ""), optional2 was \(optional2 ?? ""), optional3 was \(optional3)")
+                 return
+             }
+     
+         Do:
+             guard let variable = expect(optional) else {
+                 return
+             }
+             guard let variable = expect(optional, level: .warning) else {
+                return
+             }
+             guard let variable1 = expect(optional1), let variable2 = expect(optional2), let variable3 = expect(optional3) else {
+                return
+             }
+    */
+    
+    /// Log an error when the optional value is not nil, at the location the expect function was called
+    public func expectNonNil<T>(_ optional: T?, level: Level = .error, message: String? = nil, separator: String = " ", terminator: String = "\n", file: String = #file, line: Int = #line, column: Int = #column, function: String = #function) -> T? {
+        let message = message ?? "Unexpected value is nil!"
+        let expression = (optional != nil)
+        
+        expect(expression, level: level, message: message, separator: separator, terminator: terminator, file: file, line: line, column: column, function: function)
+        
+        return optional
+    }
+    
+    /// Log an error when the expression is `condition`, at the location the expression was found to be false
+    public func expect(_ expression: Bool, is condition: Bool = true, level: Level = .error, message: String? = nil, separator: String = " ", terminator: String = "\n", file: String = #file, line: Int = #line, column: Int = #column, function: String = #function) -> Bool {
+        if expression == condition  {
+            return condition
+        }
+        
+        let message = message ?? "Expected \(expression) expression was \(condition)!"
+        
+        log(level, [message], separator, terminator, file, line, column, function)
+        
+        return expression
+    }
+    
+    /**
      Logs a message.
      
      - parameter level:      The severity level.

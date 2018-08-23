@@ -78,7 +78,7 @@ open class Logger {
     /// The queue used for logging.
     private let queue = DispatchQueue(label: "delba.log")
     
-    public var didAddLogString : ((_ text: String) -> Void)?
+    public var didAddLogString: ((_ text: String) -> Void)?
     
     /**
      Creates and returns a new logger.
@@ -203,7 +203,9 @@ open class Logger {
         
         #if DEBUG
         log(result: result)
-        assert(level != .error, result)
+        if true || level == .error {
+            kill(getpid(), SIGTRAP) // break
+        }
         #else
         queue.async { self.log(result: result) }
         #endif
@@ -211,7 +213,7 @@ open class Logger {
     
     private func log(result: String) {
         Swift.print(result, separator: "", terminator: "")
-        appedStringToLog(result)
+        appendStringToLog(result)
     }
     
     /**
@@ -257,8 +259,10 @@ open class Logger {
         }
         return log
     }
+    
     // MARK: Private Methods
-    private func appedStringToLog(_ string: String) {
+    
+    private func appendStringToLog(_ string: String) {
         let textToAppend = string.data(using: .utf8, allowLossyConversion: false)!
         didAddLogString?(string)
         if FileManager.default.fileExists(atPath: self.logPath.path) {
@@ -278,6 +282,7 @@ open class Logger {
             }
         }
     }
+    
     private func cleanLogFile() {
         do {
             try FileManager.default.removeItem(at: logPath)

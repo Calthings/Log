@@ -207,7 +207,7 @@ open class Logger {
         let message = message ?? "Unexpected value is nil!"
         let expression = (optional != nil)
         
-        expect(expression, level: level, message: message, separator: separator, terminator: terminator, file: file, line: line, column: column, function: function)
+        _ = expect(expression, level: level, message: message, separator: separator, terminator: terminator, file: file, line: line, column: column, function: function)
         
         return optional
     }
@@ -256,8 +256,8 @@ open class Logger {
         
         #if DEBUG
         log(result: result)
-        if true || level == .error {
-            kill(getpid(), SIGTRAP) // break
+        if level == .error {
+            kill(getpid(), SIGINT) // break
         }
         #else
         queue.async { self.log(result: result) }

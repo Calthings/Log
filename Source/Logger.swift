@@ -181,23 +181,23 @@ open class Logger {
                  Log.error("The expected optional was nil")
                  return
              }
-             guard let variable = optional else {
+             guard variable != value else {
                 Log.warning("Warning!")
                 return
              }
-             guard let variable1 = optional1, let variable2 = optional2, let variable3 = optional3 else {
+             guard let variable1 = optional1, variable2 != value, let variable3 = optional3 else {
                  Log.error("optional1 was \(optional1 ?? ""), optional2 was \(optional2 ?? ""), optional3 was \(optional3)")
                  return
              }
      
          Do:
-             guard let variable = expect(optional) else {
+             guard let variable = expectNonNil(optional) else {
                  return
              }
-             guard let variable = expect(optional, level: .warning) else {
+             guard expect(variable != value, level: .warning) else {
                 return
              }
-             guard let variable1 = expect(optional1), let variable2 = expect(optional2), let variable3 = expect(optional3) else {
+             guard let variable1 = expectNonNil(optional1), expectNonNil(variable2 != value), let variable3 = expectNonNil(optional3) else {
                 return
              }
     */
@@ -218,7 +218,8 @@ open class Logger {
             return condition
         }
         
-        let message = message ?? "Expected \(expression) expression was \(condition)!"
+        var message = message ?? "Expected \(expression) expression was \(condition)!"
+        message += " Column: \(column)"
         
         log(level, [message], separator, terminator, file, line, column, function)
         

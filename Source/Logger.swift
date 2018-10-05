@@ -95,6 +95,8 @@ open class Logger {
         self.minLevel = minLevel
         
         formatter.logger = self
+
+        signal(SIGINT, SIG_IGN)
     }
     
     /**

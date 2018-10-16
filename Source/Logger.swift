@@ -70,8 +70,8 @@ open class Logger {
     /// Path for app logs
     private var _logFileName: String?
     public var logFileName: String {
-        if let name = _logFileName { return name }
-        _logFileName = "log-\(String(Date().timeIntervalSince1970)).log"
+        let name = _logFileName ?? "log-\(String(Date().timeIntervalSince1970)).log"
+        _logFileName = name
         return name
     }
 

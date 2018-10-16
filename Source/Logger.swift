@@ -76,7 +76,7 @@ open class Logger {
     }
 
     private var _logPath: URL?
-    private var logPath: URL {
+    public var logPath: URL {
         let path = _logPath ?? URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(logFileName)
         _logPath = path
         return path

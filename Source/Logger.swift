@@ -72,7 +72,7 @@ open class Logger {
     public var logFileName: String {
         if let name = _logFileName { return name }
         _logFileName = "log-\(String(Date().timeIntervalSince1970)).log"
-        return _logFileName
+        return name
     }
 
     private var _logPath: URL?

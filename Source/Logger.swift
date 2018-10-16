@@ -69,7 +69,7 @@ open class Logger {
     
     /// Path for app logs
     private var _logPath: URL?
-    private var logPath: URL {
+    public var logPath: URL {
         let path = _logPath ?? URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("log-\(String(Date().timeIntervalSince1970)).log")
         _logPath = path
         return path

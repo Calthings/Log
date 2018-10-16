@@ -61,16 +61,23 @@ open class Logger {
     public var format: String {
         return formatter.description
     }
-    
+
     /// The logger colors
     public var colors: String {
         return theme?.description ?? ""
     }
-    
+
     /// Path for app logs
+    private var _logFileName: String?
+    public var logFileName: String {
+        if let name = _logFileName { return name }
+        _logFileName = "log-\(String(Date().timeIntervalSince1970)).log"
+        return _logFileName
+    }
+
     private var _logPath: URL?
-    public var logPath: URL {
-        let path = _logPath ?? URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("log-\(String(Date().timeIntervalSince1970)).log")
+    private var logPath: URL {
+        let path = _logPath ?? URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(logFileName)
         _logPath = path
         return path
     }

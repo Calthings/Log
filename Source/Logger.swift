@@ -43,6 +43,7 @@ public func <(x: Level, y: Level) -> Bool {
 }
 
 open class Logger {
+    public static let fileName = "log-\(String(Date().timeIntervalSince1970)).log"
     /// The logger state.
     public var enabled: Bool = true
     
@@ -68,19 +69,7 @@ open class Logger {
     }
 
     /// Path for app logs
-    private var _logFileName: String?
-    public var logFileName: String {
-        let name = _logFileName ?? "log-\(String(Date().timeIntervalSince1970)).log"
-        _logFileName = name
-        return name
-    }
-
-    private var _logPath: URL?
-    public var logPath: URL {
-        let path = _logPath ?? URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(logFileName)
-        _logPath = path
-        return path
-    }
+    public private(set) var logPath: URL
 
     /// The queue used for logging.
     private let queue = DispatchQueue(label: "delba.log")
@@ -97,6 +86,7 @@ open class Logger {
      - returns: A newly created logger.
      */
     public init(formatter: Formatter = .default, theme: Theme? = nil, minLevel: Level = .trace) {
+        self.logPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(Logger.fileName)
         self.formatter = formatter
         self.theme = theme
         self.minLevel = minLevel

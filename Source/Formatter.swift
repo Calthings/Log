@@ -166,7 +166,7 @@ public class Formatter: Formatters {
     }
 }
 
-private extension Formatter {
+public extension Formatter {
     /**
      Formats a date with the specified date format.
      

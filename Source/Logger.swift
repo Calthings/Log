@@ -75,7 +75,8 @@ open class Logger {
     private let queue = DispatchQueue(label: "delba.log")
     
     public var didAddLogString: ((_ text: String) -> Void)?
-    
+    public var didLogError: ((_ domain: String, _ code: Int, _ description: String) -> Void)?
+
     /**
      Creates and returns a new logger.
      
@@ -254,6 +255,11 @@ open class Logger {
             date: date
         )
         
+        if level == .error {
+            let filename = formatter.format(file: file, fullPath: false, fileExtension: true)
+            didLogError?(filename, line, result)
+        }
+
         #if DEBUG
         log(result: result)
         if level == .error {

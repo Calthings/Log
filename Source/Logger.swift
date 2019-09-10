@@ -44,7 +44,7 @@ public func <(x: Level, y: Level) -> Bool {
 
 open class Logger {
     public static let fileName = "log-\(String(Date().timeIntervalSince1970)).log"
-    public static let loggedErrorStatements = Set<String>()
+    public static var loggedErrorStatements = Set<String>()
     
     /// The logger state.
     public var enabled: Bool = true

@@ -44,6 +44,8 @@ public func <(x: Level, y: Level) -> Bool {
 
 open class Logger {
     public static let fileName = "log-\(String(Date().timeIntervalSince1970)).log"
+    public static let loggedErrorStatements = Set<String>()
+    
     /// The logger state.
     public var enabled: Bool = true
     
@@ -259,10 +261,13 @@ open class Logger {
             let filename = formatter.format(file: file, fullPath: false, fileExtension: true)
             didLogError?(filename, line, result)
         }
-
+        
         #if DEBUG
         log(result: result)
         if level == .error {
+            let key = "\(file):\(line):\(column)"
+            guard !Logger.loggedErrorStatements.contains(key) else { return }
+            Logger.loggedErrorStatements.insert(key)
             kill(getpid(), SIGINT) // break
         }
         #else

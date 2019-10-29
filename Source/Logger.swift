@@ -50,7 +50,7 @@ open class Logger {
     public var enabled: Bool = true
 
     /// Debug Error, SIGINT.
-    public var errorInterupt: Bool = true
+    public var errorInterrupt: Bool = true
 
     /// The logger formatter.
     public var formatter: Formatter {
@@ -271,7 +271,7 @@ open class Logger {
             let key = "\(file):\(line):\(column)"
             guard !Logger.loggedErrorStatements.contains(key) else { return }
             Logger.loggedErrorStatements.insert(key)
-            if errorInterupt {
+            if errorInterrupt {
                 kill(getpid(), SIGINT) // break
             }
         }

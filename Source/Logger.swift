@@ -45,10 +45,13 @@ public func <(x: Level, y: Level) -> Bool {
 open class Logger {
     public static let fileName = "log-\(String(Date().timeIntervalSince1970)).log"
     public static var loggedErrorStatements = Set<String>()
-    
+
     /// The logger state.
     public var enabled: Bool = true
-    
+
+    /// Debug Error, SIGINT.
+    public var errorInterupt: Bool = true
+
     /// The logger formatter.
     public var formatter: Formatter {
         didSet { formatter.logger = self }
@@ -268,7 +271,9 @@ open class Logger {
             let key = "\(file):\(line):\(column)"
             guard !Logger.loggedErrorStatements.contains(key) else { return }
             Logger.loggedErrorStatements.insert(key)
-            kill(getpid(), SIGINT) // break
+            if errorInterupt {
+                kill(getpid(), SIGINT) // break
+            }
         }
         #else
         queue.async { self.log(result: result) }
